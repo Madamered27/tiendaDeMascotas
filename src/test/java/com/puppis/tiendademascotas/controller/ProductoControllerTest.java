@@ -177,6 +177,7 @@ public class ProductoControllerTest {
 		ResultActions response = mockMvc.perform(get("/producto/faltanteStock"));
 
 
+		
 		//then - 
 		response.andExpect(status().isOk())
 		.andDo(print())
