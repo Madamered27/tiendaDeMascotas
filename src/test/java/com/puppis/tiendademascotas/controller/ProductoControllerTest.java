@@ -136,28 +136,53 @@ public class ProductoControllerTest {
     	
     }
     
-//    
-//    @DisplayName("Test para obtener productos por categorias")
-//	@Test
-//	void testObtenerPorCategoria() throws Exception {
-//		//given 
-//		ProductoModel producto1 = new ProductoModel();
-//		producto1.setNombre("Hueso de goma");
-//		producto1.setPrecio(30);
-//		producto1.setStock(10);
-//		producto1.setCategoria("juguetes_perros");
-//
-//		given(productoService.obtenerPorCategoria(producto1.getCategoria())).willReturn(List.of(producto1));
-//		
-//		//when - 
-//		ResultActions response = mockMvc.perform(get("/producto/categoria", producto1.getCategoria()));
-//
-//		//then - 
-//    	response.andExpect(status().isOk())
-//		.andDo(print())
-//		.andExpect(jsonPath("$.size()", is(1)));
-//
-//	}
+    
+    @DisplayName("Test para obtener productos por categorias")
+	@Test
+	void testObtenerPorCategoria() throws Exception {
+		//given 
+		ProductoModel producto1 = new ProductoModel();
+		producto1.setNombre("Hueso de goma");
+		producto1.setPrecio(30);
+		producto1.setStock(10);
+		producto1.setCategoria("juguetes_perros");
+
+		given(productoService.obtenerPorCategoria(producto1.getCategoria())).willReturn(List.of(producto1));
+		
+		//when - 
+		ResultActions response = mockMvc.perform(get("/producto/query?categoria={categoria}", producto1.getCategoria()));
+
+		//then - 
+    	response.andExpect(status().isOk())
+		.andDo(print())
+		.andExpect(jsonPath("$.size()", is(1)));
+
+	}
+    
+	@DisplayName("Test para obtener productos para reponer stock ")
+	@Test
+	void testObtenerParaReponerStock() throws Exception {
+		//given 
+		ProductoModel producto1 = new ProductoModel();
+		producto1.setNombre("Hueso de goma");
+		producto1.setStock(5);
+	
+		ProductoModel producto2 = new ProductoModel();
+		producto2.setNombre("rascador");
+		producto2.setStock(2);
+		
+		given(productoService.obtenerParaReponerStock()).willReturn(List.of(producto2,producto1));
+		
+		//when - 
+		ResultActions response = mockMvc.perform(get("/producto/faltanteStock"));
+
+
+		//then - 
+		response.andExpect(status().isOk())
+		.andDo(print())
+		.andExpect(jsonPath("$.size()", is(2)));
+
+	}
     
     
     
