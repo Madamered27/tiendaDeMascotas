@@ -209,9 +209,7 @@ public class ProductoControllerTest {
 		given(archivoService.guardarImagenDB()).willReturn(imagen);
 
 		// when - accion o comportamiento se va a probar
-		ResultActions response = mockMvc
-				.perform(MockMvcRequestBuilders
-				.fileUpload("/producto")
+		ResultActions response = mockMvc.perform(MockMvcRequestBuilders.fileUpload("/producto")
 				.file(file).params(producto));
 
 		// then - verificacion
