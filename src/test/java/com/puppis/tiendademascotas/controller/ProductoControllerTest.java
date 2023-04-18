@@ -62,17 +62,6 @@ public class ProductoControllerTest {
 	@MockBean
 	private UsuarioServices usuarioService;
 
-	@Autowired
-	private ObjectMapper objectMapper;
-	
-	 @InjectMocks
-	 private ProductoController productoController;
-
-	
-    void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(productoController).build();
-    }
-
 	
 	  @DisplayName("Test para obtener lista de productos")
 	  
