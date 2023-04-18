@@ -20,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -43,8 +44,10 @@ import com.puppis.tiendademascotas.services.ArchivoService;
 import com.puppis.tiendademascotas.services.ProductoService;
 import com.puppis.tiendademascotas.services.UsuarioServices;
 
+
 @WebMvcTest
 public class ProductoControllerTest {
+
 
 	@Autowired
 	// MockMvc para probar peticiones http
@@ -86,7 +89,8 @@ public class ProductoControllerTest {
 	  ResultActions response = mockMvc.perform(get("/producto"));
 	  
 	  //then 
-	  response.andExpect(status().isOk()) .andDo(print())
+	  response.andExpect(status().isOk()) 
+	  .andDo(print())
 	  .andExpect(jsonPath("$.size()", is(productos.size()))); 
 	  
 	  }
@@ -94,20 +98,19 @@ public class ProductoControllerTest {
 	  @DisplayName("Test para obtener un producto por id")
 	  
 	  @Test void queSePuedaObtenerUnProducto() throws Exception { 
-		  //given 
+	  //given 
 	  Long productoId = 1L; 
 	  ProductoModel producto = new ProductoModel();
 	  producto.setNombre("Pelota tenis"); producto.setPrecio(30);
 	  producto.setStock(10); producto.setImg("http");
 	  producto.setCategoria("juguetes_perros");
 	   
-	  given(productoService.obtenerPorId(productoId)).willReturn(Optional.of(
-	  producto));
+	  given(productoService.obtenerPorId(productoId)).willReturn(Optional.of(producto));
 	  
-	  //when - cuando pido por id 
+	  //when - cuando creo y realizo la solicitud simulada
 	  ResultActions response = mockMvc.perform(get("/producto/{id}", productoId));
 	  
-	  //then - obtengo la lista 
+	  //then - obtengo la lista - verificacion de respuesta
 	  response.andExpect(status().isOk()) .andDo(print())
 	  .andExpect(jsonPath("$.nombre", is(producto.getNombre())))
 	  .andExpect(jsonPath("$.precio", is(producto.getPrecio())))
