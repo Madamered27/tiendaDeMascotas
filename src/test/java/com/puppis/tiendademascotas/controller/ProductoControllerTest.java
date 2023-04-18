@@ -86,6 +86,8 @@ public class ProductoControllerTest {
 	  given(productoService.obtenerProductos()).willReturn(productos);
 	  
 	  //when 
+	  //mockMvc se usa para simular solicitudes http
+	  //metodo perform ejecuta la solicitud
 	  ResultActions response = mockMvc.perform(get("/producto"));
 	  
 	  //then 
@@ -129,8 +131,7 @@ public class ProductoControllerTest {
 	  willDoNothing().given(productoService).eliminarProducto(productoId);
 	  
 	  //when - 
-	  ResultActions response = mockMvc.perform(delete("/producto/{id}",
-	  productoId));
+	  ResultActions response = mockMvc.perform(delete("/producto/{id}",productoId));
 	  
 	  //then - 
 	  response.andExpect(status().isOk()) .andDo(print());
@@ -217,7 +218,8 @@ public class ProductoControllerTest {
 
 		// then - verificacion
 		response.andDo(print()).andExpect(jsonPath("$.categoria", is("juguetes_perros")))
-				.andExpect(jsonPath("$.nombre", is("Pelota tenis"))).andExpect(jsonPath("$.precio", is(30)))
+				.andExpect(jsonPath("$.nombre", is("Pelota tenis")))
+				.andExpect(jsonPath("$.precio", is(30)))
 				.andExpect(jsonPath("$.stock", is(10)))
 				.andExpect(jsonPath("$.img", containsString("http://localhost:8080/img/")));
 
