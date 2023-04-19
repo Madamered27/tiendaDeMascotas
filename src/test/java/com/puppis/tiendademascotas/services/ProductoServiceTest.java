@@ -1,11 +1,16 @@
 package com.puppis.tiendademascotas.services;
 
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.BDDMockito.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,25 +24,28 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.puppis.tiendademascotas.model.ProductoModel;
 import com.puppis.tiendademascotas.repository.ProductoRepository;
 
 
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class ProductoServiceTest {
 	
 	
-	//con esta anotacion se indica que se va a crear un simulacro
-	@Mock
+	//@Mock con esta anotacion se indica que se va a crear un simulacro
+	@MockBean
 	private ProductoRepository productoRepository;
 	
-	@Mock
+	@MockBean
 	private ArchivoService archivoService;
 	
-	//se crea instancia de la clase y se le inyectan los mocks
-    @InjectMocks
+	//@InjectMocks crea instancia de la clase y se le inyectan los mocks
+	@Autowired
     private ProductoService productoService;
 	
 	private ProductoModel producto;
@@ -60,7 +68,7 @@ public class ProductoServiceTest {
 		//given - condicion previa o configuracion
 		//metodo given configura comportamiento previo
 		//simula metodo de productoRepository y se indica que va a devolver
-		given(productoRepository.save(producto)).willReturn(producto);
+		given(productoRepository.save(any(ProductoModel.class))).willReturn(producto);
 		
 		//when - accion o comportamiento se va a probar
 		//cuando dentro de guardar producto se llame al metodo save del repository, se llama
@@ -108,13 +116,15 @@ public class ProductoServiceTest {
 	@Test
 	void queSePuedaObtenerUnProducto() {
     	//given 
-		given(productoRepository.findById(1L)).willReturn(Optional.of(producto));
-		
+		given(productoRepository.findById(anyLong())).willReturn(Optional.of(producto));	
+    	
 		//when - cuando pido por id
 		Optional<ProductoModel> productoId = productoService.obtenerPorId(producto.getId());
 
 		//then - obtengo la lista 
 		 assertThat(productoId).isNotNull();
+		 verify(productoRepository).findById(argThat(arg -> arg != null && arg.equals(1L)));
+		 
 		
 	}
     
@@ -122,7 +132,7 @@ public class ProductoServiceTest {
 	@Test
 	void testModificarProducto() {
 		//given 
-    	given(productoRepository.findById(1L)).willReturn(Optional.of(producto));
+    	given(productoRepository.findById(anyLong())).willReturn(Optional.of(producto));
     	given(productoRepository.save(producto)).willReturn(producto);
     	producto.setNombre("rascador");
 		
@@ -139,7 +149,7 @@ public class ProductoServiceTest {
 	void testEliminarProducto() {
 		//given 
 		long productoId = 1L;
-		given(productoRepository.findById(1L)).willReturn(Optional.of(producto));
+		given(productoRepository.findById(anyLong())).willReturn(Optional.of(producto));
 		
 		//se indica que no se va a retornar nada, solo se ejecuta la accion de eliminar
 		willDoNothing().given(productoRepository).deleteById(productoId);

@@ -1,13 +1,11 @@
 package com.puppis.tiendademascotas.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -16,20 +14,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -45,7 +36,7 @@ import com.puppis.tiendademascotas.services.ProductoService;
 import com.puppis.tiendademascotas.services.UsuarioServices;
 
 
-@WebMvcTest
+@WebMvcTest (ProductoController.class)
 public class ProductoControllerTest {
 
 
@@ -113,12 +104,14 @@ public class ProductoControllerTest {
 	  ResultActions response = mockMvc.perform(get("/producto/{id}", productoId));
 	  
 	  //then - obtengo la lista - verificacion de respuesta
-	  response.andExpect(status().isOk()) .andDo(print())
-	  .andExpect(jsonPath("$.nombre", is(producto.getNombre())))
-	  .andExpect(jsonPath("$.precio", is(producto.getPrecio())))
-	  .andExpect(jsonPath("$.stock", is(producto.getStock())))
-	  .andExpect(jsonPath("$.categoria", is(producto.getCategoria())))
-	  .andExpect(jsonPath("$.img", is(producto.getImg())));
+	  response.andExpect(status().isOk()) 
+	  		  .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+	          .andExpect(jsonPath("$.nombre", is(producto.getNombre())))
+	          .andExpect(jsonPath("$.precio", is(producto.getPrecio())))
+	          .andExpect(jsonPath("$.stock", is(producto.getStock())))
+	          .andExpect(jsonPath("$.categoria", is(producto.getCategoria())))
+	          .andExpect(jsonPath("$.img", is(producto.getImg())))
+	          .andDo(print());
 	  
 	  }
 	  
@@ -191,7 +184,7 @@ public class ProductoControllerTest {
 	@DisplayName("Test para guardar un producto")
 	@Test
 	void testGuardarProducto() throws JsonProcessingException, Exception {
-		// given - condicion previa o configuracion
+		// given 
 		MultiValueMap<String, String> producto = new LinkedMultiValueMap<>();
 		MockMultipartFile file = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test".getBytes());
 
@@ -200,24 +193,23 @@ public class ProductoControllerTest {
 		producto.add("precio", "30");
 		producto.add("stock", "10");
 
-		ImagenModel imagen = new ImagenModel();
-		Date fechaCarga = new Date();
-
-		imagen.setNombre("");
-		imagen.setUbicacion("");
-		imagen.setFechaCarga(fechaCarga);
-		imagen.setIsEliminado(false);
 
 		given(productoService.guardarProducto(any(ProductoModel.class)))
 				.willAnswer((invocation) -> invocation.getArgument(0));
-		given(archivoService.guardarImagenDB()).willReturn(imagen);
+		given(archivoService.guardarImagenDB()).willReturn(new ImagenModel());
 
-		// when - accion o comportamiento se va a probar
-		ResultActions response = mockMvc.perform(MockMvcRequestBuilders.fileUpload("/producto")
-				.file(file).params(producto));
+		// when 
+	    ResultActions response = mockMvc.perform(multipart("/producto")
+	            .file(file)
+	            .params(producto)
+	            .with(request -> {
+	                request.setMethod("POST");
+	                return request;
+	            }));
 
-		// then - verificacion
-		response.andDo(print()).andExpect(jsonPath("$.categoria", is("juguetes_perros")))
+		// then 
+		response.andDo(print())
+				.andExpect(jsonPath("$.categoria", is("juguetes_perros")))
 				.andExpect(jsonPath("$.nombre", is("Pelota tenis")))
 				.andExpect(jsonPath("$.precio", is(30)))
 				.andExpect(jsonPath("$.stock", is(10)))
@@ -253,7 +245,7 @@ public class ProductoControllerTest {
 
 
 		    // when
-		    ResultActions result = mockMvc.perform(MockMvcRequestBuilders.multipart("/producto/{id}", productoId)
+		    ResultActions result = mockMvc.perform(multipart("/producto/{id}", productoId)
 		            .file(file)
 		            .param("categoria", productoActualizado.getCategoria())
 		            .param("nombre", productoActualizado.getNombre())

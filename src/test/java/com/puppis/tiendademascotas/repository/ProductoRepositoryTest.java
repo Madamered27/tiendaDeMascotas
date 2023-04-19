@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +81,7 @@ public class ProductoRepositoryTest {
 		Optional<ProductoModel> productoId = productoRepository.findById(producto.getId());
 
 		//then - obtengo la lista 
-		 assertThat(productoId).isNotNull();
+		assertThat(productoId).isNotNull();
 	}
 	
 	@DisplayName("Test para actualizar un producto")
