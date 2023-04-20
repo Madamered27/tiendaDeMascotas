@@ -6,3 +6,12 @@ Crear test unitarios para UsuarioServices
 
 S-03
 Crear test unitarios para UsuarioController
+
+S-04
+Crear test unitarios para ImagenRepository
+
+S-05
+Crear test unitarios para ArchivoServices
+
+S-06
+Crear test unitarios para ImagenController
