@@ -18,8 +18,6 @@ import com.puppis.tiendademascotas.model.ProductoModel;
 import com.puppis.tiendademascotas.services.ArchivoService;
 import com.puppis.tiendademascotas.services.ProductoService;
 
-
-
 @DataJpaTest 
 public class ProductoRepositoryTest {
 
