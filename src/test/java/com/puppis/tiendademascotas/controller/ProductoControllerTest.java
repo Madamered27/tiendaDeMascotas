@@ -57,8 +57,7 @@ public class ProductoControllerTest {
 	private UsuarioServices usuarioService;
 
 	
-	  @DisplayName("Test para obtener lista de productos")
-	  
+	  @DisplayName("Test para obtener lista de productos")	  
 	  @Test void testObtenerProductos() throws Exception { 
 		  //given 
 	  ProductoModel producto = new ProductoModel(); producto.setId(1L);
@@ -116,9 +115,7 @@ public class ProductoControllerTest {
 	  }
 	  
 	  @DisplayName("Test para eliminar un producto")
-	  
-	  @Test void testEliminarProducto() throws Exception { 
-	  
+	  @Test void testEliminarProducto() throws Exception {   
 	  //given 
 	   long productoId= 1L; 
 	  willDoNothing().given(productoService).eliminarProducto(productoId);

@@ -25,7 +25,7 @@ public class UsuarioController {
 	private UsuarioServices usuarioService;
 	
 	@GetMapping()
-	public List<UsuarioModel> obtenerProductos(){
+	public List<UsuarioModel> obtenerUsuarios(){
 		return usuarioService.obtenerUsuarios();
 	}
 	
@@ -35,7 +35,7 @@ public class UsuarioController {
 	}
 	
 	@DeleteMapping(path = "/{id}")
-	public String eliminarProducto(@PathVariable("id") Long id) {
+	public String eliminarUsuario(@PathVariable("id") Long id) {
 		usuarioService.eliminarUsuario(id);
 		return "El usuario ha sido eliminado";		
 	}
