@@ -62,7 +62,7 @@ public class ImagenRepositoryTest {
 		 assertThat(imagenes.size()).isEqualTo(2);
 	}
 	
-	@DisplayName("Test para obtener un producto por nombre")
+	@DisplayName("Test para obtener un imagen por nombre")
 	@Test
 	void testObtenerPorNombre() {
 		//given 
