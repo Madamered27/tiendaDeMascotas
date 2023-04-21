@@ -62,9 +62,7 @@ public class ArchivoServiceTest {
 		img.setIsEliminado(false);
 		img.setFechaCarga(new Date());
 		img.setFechaEliminacion(new Date());
-	}
-	
-	
+	}	
 	
 	@DisplayName("Test para guardar un producto")
 	@Test
