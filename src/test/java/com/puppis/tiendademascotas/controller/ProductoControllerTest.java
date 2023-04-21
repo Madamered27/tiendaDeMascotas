@@ -60,7 +60,8 @@ public class ProductoControllerTest {
 	  @DisplayName("Test para obtener lista de productos")	  
 	  @Test void testObtenerProductos() throws Exception { 
 		  //given 
-	  ProductoModel producto = new ProductoModel(); producto.setId(1L);
+	  ProductoModel producto = new ProductoModel(); 
+	  producto.setId(1L);
 	  producto.setNombre("Pelota tenis"); producto.setPrecio(30);
 	  producto.setStock(10); producto.setImg("http");
 	  producto.setCategoria("juguetes_perros");
